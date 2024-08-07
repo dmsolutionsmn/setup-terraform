@@ -292,19 +292,22 @@ jobs:
     - name: Setup Terraform
       uses: ./
 
+    # coerce initial command exit code into:
+    # 0 -> 5
+    # anything else -> 10
     - name: Terraform Init
-      run: $(terraform init) && $(exit 77) || [ $? -eq 77 ]
+      run: $(terraform init) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
 
     - name: Terraform Format
-      run: $(terraform fmt -check) && $(exit 77) || [ $? -eq 77 ]
+      run: $(terraform fmt -check) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
 
     - name: Terraform Plan
       id: plan
-      run: $(terraform plan --detailed-exitcode) && $(exit 77) || [ $? -ne 77 ]
+      run: $(terraform plan --detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
 
     - name: Terraform Plan2
       id: plan2
-      run: $(terraform plan -no-color -detailed-exitcode) && $(exit 77) || [ $? -ne 77 ]
+      run: $(terraform plan -no-color -detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
 
     - name: Print Terraform Plan
       run: echo "${{ steps.plan.outputs.stdout }}"
