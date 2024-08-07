@@ -275,7 +275,7 @@ jobs:
     - name: Print Terraform Plan
       run: echo "${{ steps.plan.outputs.stdout }}"
 
- terraform-run-local-failure:
+  terraform-run-local-failure:
     name: 'Terraform Run Local Failures'
     runs-on: ${{ matrix.os }}
     strategy:
