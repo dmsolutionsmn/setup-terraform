@@ -36,6 +36,7 @@ async function checkTerraform () {
     ignoreReturnCode: true,
     silent: true // avoid printing command in stdout: https://github.com/actions/toolkit/issues/649
   };
+  core.info(args);
   const exitCode = await exec(pathToCLI, args, options);
   const usingDetailedExitcode = args.filter(arg => arg.toLowerCase().endsWith('-detailed-exitcode'))
 
@@ -44,7 +45,7 @@ async function checkTerraform () {
   core.setOutput('stderr', stderr.contents);
   core.setOutput('exitcode', exitCode.toString(10));
 
-  if (exitCode === 0 || (exitCode === 2 && usingDetailedExitcode)) {
+  if (exitCode === 0 || (exitCode === 2 && false)) {
     // A exitCode of 0 is considered a success
     // An exitCode of 2 may be returned when the '-detailed-exitcode' option
     // is passed to plan. This denotes Success with non-empty
