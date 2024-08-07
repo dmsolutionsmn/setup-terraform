@@ -299,15 +299,15 @@ jobs:
       run: $(terraform init) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
 
     - name: Terraform Format
-      run: $(terraform fmt -check) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
+      run: terraform fmt -check
 
     - name: Terraform Plan
       id: plan
-      run: $(terraform plan --detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
+      run: $(terraform plan --detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
 
     - name: Terraform Plan2
       id: plan2
-      run: $(terraform plan -no-color -detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
+      run: $(terraform plan -no-color -detailed-exitcode) || $(exit 10) && $(exit 5) || [ $? -eq 10 ]
 
     - name: Print Terraform Plan
       run: echo "${{ steps.plan.outputs.stdout }}"
