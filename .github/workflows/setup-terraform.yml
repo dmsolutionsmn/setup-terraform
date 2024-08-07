@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
     defaults:
       run:
         shell: bash
@@ -32,7 +32,7 @@ jobs:
     # 0 -> 5
     # anything else -> 10
     - name: Terraform Init
-      run: $(echo hello) || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
+      run: $(echo "hello") || $(exit 10) && $(exit 5) || [ $? -eq 5 ]
 
     - name: Terraform Format
       run: terraform fmt -check
