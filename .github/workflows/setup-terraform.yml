@@ -275,6 +275,40 @@ jobs:
     - name: Print Terraform Plan
       run: echo "${{ steps.plan.outputs.stdout }}"
 
+ terraform-run-local-failure:
+    name: 'Terraform Run Local Failures'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.github/workflows/data/failure
+    steps:
+    - name: Checkout
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+    - name: Setup Terraform
+      uses: ./
+
+    - name: Terraform Init
+      run: $(terraform init) && $(exit 77) || [ $? -eq 77 ]
+
+    - name: Terraform Format
+      run: $(terraform fmt -check) && $(exit 77) || [ $? -eq 77 ]
+
+    - name: Terraform Plan
+      id: plan
+      run: $(terraform plan --detailed-exitcode) && $(exit 77) || [ $? -ne 77 ]
+
+    - name: Terraform Plan2
+      id: plan2
+      run: $(terraform plan -no-color -detailed-exitcode) && $(exit 77) || [ $? -ne 77 ]
+
+    - name: Print Terraform Plan
+      run: echo "${{ steps.plan.outputs.stdout }}"
+
   terraform-run-local-no-wrapper:
     name: 'Terraform Run Local No Wrapper'
     runs-on: ${{ matrix.os }}
